@@ -52,7 +52,3 @@ func TestAMQP(t *testing.T) {
 	}
 
 }
-
-func er(t *testing.T, err error) {
-
-}
