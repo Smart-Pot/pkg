@@ -56,7 +56,7 @@ func (c *consumer) init() error {
 		return err
 	}
 	// We consume data from the queue named Test using the channel we created in go.
-	msgs, err := c.ch.Consume(c.queue, "", false, false, false, false, nil)
+	msgs, err := c.ch.Consume(c.queue, "", true, false, false, false, nil)
 
 	if err != nil {
 		return err
