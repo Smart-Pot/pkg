@@ -6,35 +6,47 @@ import (
 	"github.com/streadway/amqp"
 )
 
+type Producer interface {
+	Produce([]byte) error
+}
+
+func MakeProducer(exchange string) (Producer, error) {
+	if !isSet {
+		return nil, ErrNotSet
+	}
+	p := &producer{
+		ch:       _channel,
+		exchange: exchange,
+	}
+
+	if err := p.init(); err != nil {
+		return nil, err
+	}
+	return p, nil
+}
+
 type producer struct {
-	ch    *amqp.Channel
-	queue string
+	ch       *amqp.Channel
+	exchange string
 }
 
 func (p *producer) init() error {
-	channel := p.ch
 	// We create an exahange that will bind to the queue to send and receive messages
-	err := channel.ExchangeDeclare(p.queue+exchange, "topic", true, false, false, false, nil)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return p.ch.ExchangeDeclare(p.exchange, "topic", true, false, false, false, nil)
 }
 
-func (p *producer) produceStr(s string) error {
+func (p *producer) Produce(b []byte) error {
 	message := amqp.Publishing{
-		Body: []byte(s),
+		Body: b,
 	}
-	return p.produce(message)
+	return p._produce(message)
 
 }
 
-func (p *producer) produce(msg amqp.Publishing) error {
+func (p *producer) _produce(msg amqp.Publishing) error {
 
 	// We publish the message to the exahange we created earlier
-	err := p.ch.Publish(p.queue+exchange, "random-key", false, false, msg)
+	err := p.ch.Publish(p.exchange, "random-key", false, false, msg)
 	if err != nil {
 		return fmt.Errorf("error publishing a message to the queue: %s", err)
 	}
