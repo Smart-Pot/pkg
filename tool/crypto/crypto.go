@@ -17,6 +17,10 @@ var (
 
 var privateKey []byte
 
+func PrivateKey() string {
+	return string(privateKey)
+}
+
 const defaultKey = "placeholder_key_"
 
 func init() {
@@ -54,7 +58,10 @@ func encrypt(key []byte, text string) (string, error) {
 
 // decrypt from base64 to decrypted string
 func decrypt(key []byte, cryptoText string) (string, error) {
-	ciphertext, _ := base64.URLEncoding.DecodeString(cryptoText)
+	ciphertext, err := base64.URLEncoding.DecodeString(cryptoText)
+	if err != nil {
+		return "", err
+	}
 
 	block, err := aes.NewCipher(key)
 	if err != nil {

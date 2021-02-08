@@ -24,3 +24,13 @@ func TestEncrypt(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+func TestDecrypt(t *testing.T) {
+	m := "QxKUJqrQZX1mQIEZ"
+	res, err := Decrypt(m)
+	if err != nil {
+		t.Error(err)
+		t.FailNow()
+	}
+	fmt.Println("Res", res)
+}
