@@ -42,7 +42,7 @@ func NewVersionFromString(v string) (Version, error) {
 		}
 		vv[i] = int(mm)
 	}
-	return NewVersion(vv[0], vv[0], vv[0]), nil
+	return NewVersion(vv[0], vv[1], vv[2]), nil
 }
 
 func (v *version) Major() int {
