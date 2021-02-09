@@ -6,8 +6,8 @@ import (
 )
 
 func TestEncrypt(t *testing.T) {
-	var text = "deneme"
-	key := []byte("example_key_xxxx")
+	var text = "682efc3f-6dac-46eb-804b-86970550bf31"
+	key := privateKey
 	e, err := encrypt(key, text)
 	if err != nil {
 		t.Error(err)
