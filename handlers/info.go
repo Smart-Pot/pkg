@@ -1,15 +1,19 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Smart-Pot/pkg/common"
+	"github.com/gorilla/mux"
 )
 
-func GetInfoHandler(serviceName string, version common.Version) http.Handler {
-	var f http.HandlerFunc = func(w http.ResponseWriter, r *http.Request) {
-		// Write Information
-	}
+func SetInfoHandler(r *mux.Router, serviceName string, version common.Version) http.Handler {
 
-	return f
+	r.Methods("GET").Path("info").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "%s v-%s", serviceName, version.String())
+	})
+
+	return r
+
 }
