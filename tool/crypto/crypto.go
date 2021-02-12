@@ -1,3 +1,6 @@
+/*
+Package crypto implements functions for simple encrypt and decrypt process.
+In encryption and decryption process, package uses aes algorithm */
 package crypto
 
 import (
@@ -12,11 +15,14 @@ import (
 )
 
 var (
+	// ErrShortCipher codes returned by failures when key is shorter than expected value.
 	ErrShortCipher = errors.New("cipher text is too short")
 )
 
 var privateKey []byte
 
+// PrivateKey returns private key that using in encrpytion and decryption process
+// And makes private key access to read-only.
 func PrivateKey() string {
 	return string(privateKey)
 }
@@ -83,10 +89,11 @@ func decrypt(key []byte, cryptoText string) (string, error) {
 	return fmt.Sprintf("%s", ciphertext), nil
 }
 
+// Encrypt text with private key using aes algorithm
 func Encrypt(text string) (string, error) {
 	return encrypt(privateKey, text)
 }
-
+// Decrypt text with private key using aes algorithm
 func Decrypt(hash string) (string, error) {
 	return decrypt(privateKey, hash)
 }
