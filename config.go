@@ -23,7 +23,6 @@ Usage:
 
 		address := pkg.Config.Server.Address
 	}
-
 */
 package pkg
 
@@ -34,7 +33,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-
 type databaseConfig struct {
 	User     string `json:"user"`
 	Password string `json:"password"`
@@ -43,18 +41,18 @@ type databaseConfig struct {
 	DBName   string `json:"dbName"`
 }
 
-type serverConfig struct{
+type serverConfig struct {
 	Address string `json:"address"`
 }
 type config struct {
-	Database databaseConfig `json:"database"`
-	Server serverConfig	`json:"server"`
-	AMQPAddress string `json:"amqpAdress"`
+	Database    databaseConfig `json:"database"`
+	Server      serverConfig   `json:"server"`
+	AMQPAddress string         `json:"amqpAdress"`
 }
 
 type configOptions struct {
 	// BaseDir is base directory that config file is located
-	BaseDir    string
+	BaseDir string
 	// ConfigType is file type of configuration file.
 	// it could be: json, yaml, yml, etc.
 	ConfigType string
@@ -87,7 +85,7 @@ func (c *config) fillDefaults() {
 	c.AMQPAddress = "amqp://guest:guest@localhost:5672"
 }
 
-// ReadConfig reads configurations from given file with given options in ConfigOptions 
+// ReadConfig reads configurations from given file with given options in ConfigOptions
 func (c *config) ReadConfig() error {
 
 	c.fillDefaults()
