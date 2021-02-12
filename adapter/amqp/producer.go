@@ -1,3 +1,32 @@
+/*
+Package amqp implements a simple amqp producer to share message to any exchange
+
+Usage:
+
+	package main
+
+	import (
+		...
+		"fmt"
+		"github.com/Smart-Pot/pkg/adapter/amqp"
+		...
+	)
+
+	func main(){
+		...
+
+		producer,err := amqp.MakeProducer("exchange_name")
+		if err != nil {
+			// handle error
+		}
+
+		if err = producer.Produce(); err != nil {
+			// handle err
+		}
+		...
+	}
+
+*/
 package amqp
 
 import (
@@ -6,12 +35,14 @@ import (
 	"github.com/streadway/amqp"
 )
 
+// Producer represent an AMQP producer for topic exchange model
 type Producer interface {
 	Produce([]byte) error
 }
 
+// MakeProducer creates a producer for the given exchange
 func MakeProducer(exchange string) (Producer, error) {
-	if !isSet {
+	if !_isSet {
 		return nil, ErrNotSet
 	}
 	p := &producer{
@@ -31,10 +62,10 @@ type producer struct {
 }
 
 func (p *producer) init() error {
-	// We create an exahange that will bind to the queue to send and receive messages
+	// Make sure that exchange is exist
 	return p.ch.ExchangeDeclare(p.exchange, "topic", true, false, false, false, nil)
 }
-
+// Produce publish an message to the exchange of the producer
 func (p *producer) Produce(b []byte) error {
 	message := amqp.Publishing{
 		Body: b,
@@ -45,7 +76,7 @@ func (p *producer) Produce(b []byte) error {
 
 func (p *producer) _produce(msg amqp.Publishing) error {
 
-	// We publish the message to the exahange we created earlier
+	// Publish message to exchange of the producer
 	err := p.ch.Publish(p.exchange, "random-key", false, false, msg)
 	if err != nil {
 		return fmt.Errorf("error publishing a message to the queue: %s", err)

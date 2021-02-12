@@ -35,7 +35,7 @@ import (
 
 var _channel *amqp.Channel
 
-var isSet bool = false
+var _isSet bool = false
 
 var (
 	ErrNotSet = errors.New("amqp adapter is not set")
@@ -53,7 +53,7 @@ func Set(url string) error {
 	if err != nil {
 		return err
 	}
-	isSet = true
+	_isSet = true
 	return nil
 }
 
