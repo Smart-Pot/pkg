@@ -2,50 +2,33 @@ package common
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func TestVersion(t *testing.T) {
 
-	t.Run("Create Version", func(t *testing.T) {
-		v := NewVersion(1, 2, 15)
-		if v.String() != "1.2.15" {
-			t.Error("want", "1.2.15", " got", v.String())
-			t.FailNow()
-		}
-	})
-
-	t.Run("New Version From String", func(t *testing.T) {
-		str := "1.5.3"
-		sv := NewVersion(1, 5, 3)
-		sver, err := NewVersionFromString(str)
-		if err != nil {
-			t.Error(err)
-			t.FailNow()
-		}
-		if str != sv.String() {
-			t.Error("want", str, "got", sv.String())
-			t.FailNow()
-		}
-		if sver.Compare(sv) == 0 {
-			t.Error("Not equal", sver, sv)
-			t.FailNow()
-		}
-
-	})
-
-	t.Run("Compare Version", func(t *testing.T) {
-		big := NewVersion(1, 5, 3)
-		small := NewVersion(1, 4, 3)
-		if big.Compare(small) != 1 {
-			t.FailNow()
-		}
-		if small.Compare(big) != -1 {
-			t.FailNow()
-		}
-		if big.Compare(big) != 0 {
-			t.FailNow()
-		}
-
-	})
-
+func TestVersion_String(t *testing.T){
+	v := NewVersion(1,2,15)
+	assert.Equal(t,"1.2.15",v.String())
 }
+
+func TestVersion_Compare(t *testing.T){
+	
+	big := NewVersion(1,2,15)
+	small := NewVersion(1,0,1)
+	
+	assert.Equal(t,1,big.Compare(small))
+	assert.Equal(t,0,big.Compare(big))
+	assert.Equal(t,-1,small.Compare(big))
+}
+
+
+func TestNewVersionFromString(t *testing.T) {
+	versionStr := "1.2.15"
+	v,err := NewVersionFromString(versionStr)
+	assert.Nil(t,err)
+	assert.Equal(t,v.Major(),1)
+	assert.Equal(t,v.Minor(),2)
+	assert.Equal(t,v.Patch(),15)
+}
+
