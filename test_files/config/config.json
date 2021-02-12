@@ -1,0 +1,10 @@
+{
+  "server": {
+    "address": ":3000"
+  },
+  "database": {
+    "addr": "example.url",
+    "dbName": "exampledb"
+  },
+  "amqpAddress": "amqp.address"
+}

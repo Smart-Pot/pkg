@@ -1,0 +1,8 @@
+Server:
+  Address: :3000
+
+Database:
+  DBName: exampledb
+  Addr: example.url
+
+AMQPAddress: amqp.address
