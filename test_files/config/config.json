@@ -1,4 +1,6 @@
 {
+  "Name": "Pkg Service",
+  "Version": "1.2.3",
   "server": {
     "address": ":3000"
   },
