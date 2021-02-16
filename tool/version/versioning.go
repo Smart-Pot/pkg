@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Smart-Pot/pkg/common"
+	"github.com/Smart-Pot/pkg/common/version"
 )
 
 const (
@@ -32,7 +32,7 @@ func Match(r *http.Request, query string) (bool, error) {
 	if avstr == "" {
 		return false, ErrVersionNotFound
 	}
-	apiv, err := common.NewVersionFromString(avstr)
+	apiv, err := version.FromString(avstr)
 	if err != nil {
 		return false, ErrInvalidAPIVersion
 	}
@@ -50,7 +50,7 @@ func Match(r *http.Request, query string) (bool, error) {
 	return false, nil
 }
 
-func parseQuery(q string) ([]int, common.Version, error) {
+func parseQuery(q string) ([]int, version.Version, error) {
 	parts := strings.Split(q, " ")
 	if len(parts) != 2 {
 		return nil, nil, ErrInvalidQuery
@@ -60,7 +60,7 @@ func parseQuery(q string) ([]int, common.Version, error) {
 	if !ok {
 		return nil, nil, ErrInvalidQuery
 	}
-	qv, err := common.NewVersionFromString(parts[1])
+	qv, err :=  version.FromString(parts[1])
 	if err != nil {
 		return nil, nil, ErrInvalidQuery
 	}

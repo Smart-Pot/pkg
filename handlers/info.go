@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Smart-Pot/pkg/common"
+	"github.com/Smart-Pot/pkg/common/version"
 )
 
 
@@ -12,7 +12,7 @@ var _ http.Handler = (*infoHandler)(nil)
 
 type infoHandler struct {
 	serviceName string
-	version common.Version
+	version version.Version
 }
 
 
@@ -26,7 +26,7 @@ func (h *infoHandler) info() string {
 
 
 
-func NewInfoHandler(serviceName string, version common.Version) http.Handler {
+func NewInfoHandler(serviceName string, version version.Version) http.Handler {
 	return &infoHandler{
 		serviceName: serviceName,
 		version : version,

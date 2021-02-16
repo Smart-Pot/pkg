@@ -45,9 +45,11 @@ type serverConfig struct {
 	Address string `json:"address"`
 }
 type config struct {
+	Name        string         `json:"name"`
+	Version     string `json:"version", yml:"_"`
 	Database    databaseConfig `json:"database"`
 	Server      serverConfig   `json:"server"`
-	AMQPAddress string         `json:"amqpAdress"`
+	AMQPAddress string         `json:"amqpAddress"`
 }
 
 type configOptions struct {
@@ -76,12 +78,15 @@ var Config config
 func (c *config) fillDefaults() {
 	c.Server = serverConfig{":3000"}
 	c.Database = databaseConfig{
+	
 		User:     "",
 		Password: "",
 		Net:      "",
 		Addr:     "mongodb://localhost:27017",
 		DBName:   "test",
 	}
+	wd,_ := os.Getwd()
+	c.Name = filepath.Base(wd)
 	c.AMQPAddress = "amqp://guest:guest@localhost:5672"
 }
 
@@ -89,8 +94,6 @@ func (c *config) fillDefaults() {
 func (c *config) ReadConfig() error {
 
 	c.fillDefaults()
-	C := &c
-
 	v := viper.New()
 	v.SetConfigName("config")
 	v.SetConfigType(ConfigOptions.ConfigType)
@@ -100,7 +103,7 @@ func (c *config) ReadConfig() error {
 	if err := v.ReadInConfig(); err != nil {
 		return err
 	}
-	if err := v.Unmarshal(&C); err != nil {
+	if err := v.Unmarshal(&c); err != nil {
 		return err
 	}
 	return nil
