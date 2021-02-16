@@ -1,5 +1,5 @@
-// Package common implements bundle of version utilities for versioning APIs
-package common
+// Package version implements bundle of version utilities for versioning APIs
+package version
 
 import (
 	"errors"
@@ -12,6 +12,9 @@ var (
 	// ErrInvalidVersionStr :
 	ErrInvalidVersionStr = errors.New("version string is not valid")
 )
+
+
+
 
 type version struct {
 	major int
@@ -27,14 +30,17 @@ type Version interface {
 	Compare(v Version) int
 }
 
-// NewVersion creates a new version
-func NewVersion(major, minor, patch int) Version {
+// New creates a new version
+func New(major, minor, patch int) Version {
 	return &version{major, minor, patch}
 }
 
-// NewVersionFromString creates a new string from plain version string
+// FromString creates a new string from plain version string
 // such as: '1.2.5','3.5.4'
-func NewVersionFromString(v string) (Version, error) {
+func FromString(v string) (Version, error) {
+	return newVersionFromString(v)
+}
+func newVersionFromString(v string) (*version,error) {
 	parts := strings.Split(v, ".")
 	if len(parts) != 3 {
 		return nil, ErrInvalidVersionStr
@@ -47,7 +53,8 @@ func NewVersionFromString(v string) (Version, error) {
 		}
 		vv[i] = int(mm)
 	}
-	return NewVersion(vv[0], vv[1], vv[2]), nil
+	return &version{vv[0], vv[1], vv[2]}, nil
+
 }
 // Major returns a version for incompatible API changes,
 func (v *version) Major() int {
