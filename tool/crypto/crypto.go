@@ -19,27 +19,64 @@ var (
 	ErrShortCipher = errors.New("cipher text is too short")
 )
 
-var privateKey []byte
-
-// PrivateKey returns private key that using in encrpytion and decryption process
-// And makes private key access to read-only.
-func PrivateKey() string {
-	return string(privateKey)
-}
-
 const defaultKey = "placeholder_key_"
 
-func init() {
+var (
+	// ForgotPwdCip :
+	ForgotPwdCip Cipher
+	// VerifyMailCip :
+	VerifyMailCip Cipher
+)
 
-	k := os.Getenv("VERIF_PRIVATE_KEY")
-	if k == "" {
-		k = defaultKey
+
+func init(){
+	forgotCipSecret := os.Getenv("FOROT_PWD_SECRET")
+	if forgotCipSecret == "" {
+		forgotCipSecret = defaultKey
 	}
-	if len(k) != 16 {
-		panic("Crypto key is too short:")
+	
+	verifyMailSecret := os.Getenv("VERIFY_MAIL_SECRET")
+	if verifyMailSecret  == "" {
+		verifyMailSecret = defaultKey
+	}	
+	
+	ForgotPwdCip = &_cipher{
+		key: []byte(forgotCipSecret),
 	}
-	privateKey = []byte(k)
+	VerifyMailCip = &_cipher {
+		key:[]byte(verifyMailSecret),
+	}
 }
+
+
+
+// Cipher :
+type Cipher interface {
+	Encrypt(text string) (string , error)
+	Decrypt(hash string) (string,error)
+}
+
+type _cipher  struct {
+	key []byte
+}
+
+// NewCipher :
+func NewCipher(key string) Cipher {
+	return &_cipher{
+		key : []byte(key),
+	}
+}
+
+// Encrypt text with private key using aes algorithm
+func (c *_cipher) Encrypt(text string) (string, error) {
+	return encrypt(c.key, text)
+}
+// Decrypt text with private key using aes algorithm
+func (c *_cipher) Decrypt(hash string) (string, error) {
+	return decrypt(c.key, hash)
+}
+
+
 
 // encrypt string to base64 crypto using AES
 func encrypt(key []byte, text string) (string, error) {
@@ -89,11 +126,4 @@ func decrypt(key []byte, cryptoText string) (string, error) {
 	return fmt.Sprintf("%s", ciphertext), nil
 }
 
-// Encrypt text with private key using aes algorithm
-func Encrypt(text string) (string, error) {
-	return encrypt(privateKey, text)
-}
-// Decrypt text with private key using aes algorithm
-func Decrypt(hash string) (string, error) {
-	return decrypt(privateKey, hash)
-}
+
