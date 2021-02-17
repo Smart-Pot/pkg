@@ -23,7 +23,8 @@ var (
 
 
 var (
-	_defaultJWT *JWT = getDefaultJWT()
+	// Default :
+	Default *JWT = getDefaultJWT()
 )
 
 func getSecretKey() []byte {
@@ -60,12 +61,12 @@ type authTokenClaims struct {
 
 // Tokenize :
 func Tokenize(t *AuthToken) (string,error) {
-	return _defaultJWT.Tokenize(t)
+	return Default.Tokenize(t)
 } 
 
 // Verify :
 func Verify(token string) (*AuthToken,error) {
-	return _defaultJWT.Verify(token)
+	return Default.Verify(token)
 }
 
 // JWT :

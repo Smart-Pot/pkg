@@ -1,7 +1,6 @@
 package jwt
 
 import (
-	"os"
 	"testing"
 	"time"
 
@@ -25,14 +24,6 @@ var (
 		Timeout: 2*365*24*time.Hour,
 	}
 )
-
-func TestMain(m *testing.M) {
-	// Make jwt secret empty to use test secret key
-	os.Setenv("JWT_SECRET","")
-	// set test secret key as secret key
-	_defaultJWT.Secret = []byte(_testSecretKey)
-	os.Exit(m.Run())
-}
 
 
 func TestTokenize(t *testing.T) {
