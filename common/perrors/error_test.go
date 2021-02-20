@@ -19,7 +19,7 @@ func TestParseError(t *testing.T) {
 	const m = "example_message"
 	const c = 303
 	var err error = perrors.New(m,c)
-	pe,ok := err.(*perrors.Error)
+	pe,ok := err.(perrors.Error)
 	assert.True(t,ok)
 	assert.Equal(t,m,pe.Error())
 	assert.Equal(t,c,pe.Code())

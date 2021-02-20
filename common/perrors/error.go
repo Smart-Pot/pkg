@@ -1,26 +1,35 @@
 package perrors
 
+import "fmt"
+
 // Error :
-type Error struct {
+type Error interface {
+	Error() string
+	Code() int
+}
+type perror struct {
 	code int
 	message string
 }
 
-func (e *Error) Error() string {
+func (e *perror) Error() string {
 	return e.message
 }
 
-func (e *Error) Code() int {
+func (e *perror) Code() int {
 	return e.code
 }
 
-func New(msg string,code int) *Error {
-	return &Error{
+func New(msg string,code int) *perror {
+	return &perror{
 		message: msg,
 		code: code,
 	}
 }
 
+func FromError(msg string,code int,cause error) Error {
+	return New(fmt.Sprintf("%s : %s",msg,cause.Error()),code)
+}
 
-
-var _ error = (*Error)(nil)
+var _ Error = (*perror)(nil)
+var _ error = (Error)(nil)
