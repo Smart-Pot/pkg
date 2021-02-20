@@ -1,6 +1,9 @@
 package perrors
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+)
 
 // Error :
 type Error interface {
@@ -30,6 +33,15 @@ func New(msg string,code int) *perror {
 func FromError(msg string,code int,cause error) Error {
 	return New(fmt.Sprintf("%s : %s",msg,cause.Error()),code)
 }
+
+func FromStatusCode(code int) Error {
+	msg := http.StatusText(code)
+	return &perror{
+		message: msg,
+		code: code,
+	}
+}
+
 
 var _ Error = (*perror)(nil)
 var _ error = (Error)(nil)
