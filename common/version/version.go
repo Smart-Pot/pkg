@@ -2,6 +2,8 @@
 package version
 
 import (
+	"encoding"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
@@ -28,6 +30,10 @@ type Version interface {
 	Patch() int
 	String() string
 	Compare(v Version) int
+	json.Unmarshaler
+	json.Marshaler
+	encoding.TextMarshaler
+	encoding.TextUnmarshaler
 }
 
 // New creates a new version
@@ -101,4 +107,29 @@ func (v *version) compareNum(x, y int) int {
 		return -1
 	}
 	return 0
+}
+
+
+func (v *version) UnmarshalJSON(b []byte) error {
+	fmt.Println("HEL")
+	return v.UnmarshalText(b)
+}
+
+func (v *version) MarshalJSON() ([]byte,error) {
+	return v.MarshalText()
+}
+
+func (v *version) UnmarshalText(b []byte) error {
+	s := string(b)
+	s = strings.Trim(s,"\"")
+	vv,err := newVersionFromString(s)
+	if err != nil {
+		return err
+	}
+	v = vv
+	return nil
+}
+
+func (v *version) MarshalText() ([]byte,error) {
+	return []byte(v.String()),nil
 }
