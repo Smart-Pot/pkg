@@ -7,6 +7,8 @@ require (
 	github.com/eclipse/paho.mqtt.golang v1.3.2
 	github.com/go-kit/kit v0.10.0
 	github.com/go-logr/logr v0.4.0
+	github.com/gorilla/handlers v1.5.1
+	github.com/gorilla/mux v1.7.3
 	github.com/spf13/viper v1.7.1
 	github.com/streadway/amqp v1.0.0
 	github.com/stretchr/testify v1.7.0
