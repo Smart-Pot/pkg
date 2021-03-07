@@ -60,6 +60,11 @@ type configOptions struct {
 	ConfigType string
 }
 
+// FromBaseDir return filename with basedir prefix
+func (opt configOptions) FromBaseDir(filename string) string {
+	return filepath.Join(opt.BaseDir,filename)
+}
+
 // ConfigOptions is options for reading config file process
 var ConfigOptions configOptions = initConfigOptions()
 
@@ -92,18 +97,35 @@ func (c *config) fillDefaults() {
 
 // ReadConfig reads configurations from given file with given options in ConfigOptions
 func (c *config) ReadConfig() error {
-
 	c.fillDefaults()
+	return readConfigToStruct(ConfigOptions.BaseDir,"config",ConfigOptions.ConfigType,&c)
+}
+
+// UnmarshalConfigFromFile read configurations from ``filename` and unmarshal it on the `v`
+func (c *config) UnmarshalConfigFromFile(filename string,v interface{}) error {
+	b,f,e := splitFilename(filename)
+	return readConfigToStruct(b,f,e,v)
+}
+
+func splitFilename(filename string) (basedir,name,ftype string) {
+	basedir,name = filepath.Split(filename)
+	ftype = filepath.Ext(name)[1:]
+	name = name[:len(name)-len(ftype)-1]
+	return
+}
+
+
+func readConfigToStruct(basedir,name,ftype string, val interface{}) error {
 	v := viper.New()
-	v.SetConfigName("config")
-	v.SetConfigType(ConfigOptions.ConfigType)
-	v.AddConfigPath(ConfigOptions.BaseDir)
+	v.SetConfigName(name)
+	v.SetConfigType(ftype)
+	v.AddConfigPath(basedir)
 	v.AutomaticEnv()
 
 	if err := v.ReadInConfig(); err != nil {
 		return err
 	}
-	if err := v.Unmarshal(&c); err != nil {
+	if err := v.Unmarshal(&val); err != nil {
 		return err
 	}
 	return nil

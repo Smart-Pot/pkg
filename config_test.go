@@ -41,6 +41,7 @@ func TestReadConfigJSON(t *testing.T) {
 	assert.Equal(t, testConfig.AMQPAddress, Config.AMQPAddress)
 }
 
+
 func TestReadConfigYAML(t *testing.T) {
 	// Set config options for json
 	ConfigOptions.ConfigType = "json"
@@ -53,4 +54,45 @@ func TestReadConfigYAML(t *testing.T) {
 	assert.Equal(t, testConfig.Database.Addr, Config.Database.Addr)
 	assert.Equal(t, testConfig.Database.DBName, Config.Database.DBName)
 	assert.Equal(t, testConfig.AMQPAddress, Config.AMQPAddress)
+}
+
+
+func TestReadConfigToStruct(t *testing.T) {
+	var v struct{
+		Test string
+		Hello string
+	}
+	err := readConfigToStruct(ConfigOptions.BaseDir,"custom","json",&v)
+	assert.Nil(t,err)
+	assert.Equal(t,"Message",v.Test)
+	assert.Equal(t,"World",v.Hello)
+}
+
+func TestUnmarshalConfigFromFile(t *testing.T) {
+	var v struct{
+		Test string
+		Hello string
+	}
+	err := Config.UnmarshalConfigFromFile(ConfigOptions.FromBaseDir("custom.json"),&v)
+	assert.Nil(t,err)
+	assert.Equal(t,"Message",v.Test)
+	assert.Equal(t,"World",v.Hello)
+}
+
+func TestSplitFilename(t *testing.T) {
+	tests := []struct {
+		dir string
+		filename string
+		ext string
+	} {
+		{"the/base/dir/","filename",".json"},
+	}
+
+	for _,ti := range tests {
+		pp := ti.dir + ti.filename + ti.ext
+		d,f,e := splitFilename(pp)
+		assert.Equal(t,ti.dir,d)
+		assert.Equal(t,ti.filename,f)
+		assert.Equal(t,ti.ext[1:],e)
+	}
 }
