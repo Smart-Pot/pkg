@@ -9,7 +9,7 @@ import (
 
 // EnableCORS enable CORS for given router.
 func EnableCORS(r *mux.Router) http.Handler {
-	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
+	headers := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization","x-auth-token"})
 	methods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"})
 	origins := handlers.AllowedOrigins([]string{"*"})
 
